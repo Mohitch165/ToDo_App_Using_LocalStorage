@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     tasks.push(newTask);
     saveTasks();
+    renderTask(newTask);
     todoInput.value = "" //Clear Input
     });
 
@@ -28,11 +29,18 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = 
         `<span>${task.task}</span>
         <button>delete</delete>`; // Grabs task content and adds it to the li
-        li.addEventListener('click', (e) => {
+        li.addEventListener('click', (e) => { // Event to identify target of "click" and add,toggle appropriate property of the target li.
             if(e.target.tagName === 'BUTTON') return;
             task.isCompleted = !task.isCompleted
             li.classList.toggle('completed')
             saveTasks()
+        });
+
+        li.querySelector('button').addEventListener('click', (e) => { // Event to filter tasks based on ID and delete them from the list.
+            e.stopPropagation(); // stops other properties of parent li from firing.
+            tasks = tasks.filter((t) => t.id !== task.id);
+            li.remove();
+            saveTasks();
         })
         todoList.appendChild(li);
     }
